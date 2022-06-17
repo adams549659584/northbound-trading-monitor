@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-size: 1.5vh;
+}
+
+/* header start */
+.nav {
+  width: 100vw;
+  margin: 0 auto;
+  text-align: center;
+}
+.nav__title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav__title-content {
+  font-size: 2vh;
+  font-weight: bold;
+  line-height: 5vh;
+}
+.nav__title-github {
+  margin-left: 1vw;
+}
+.nav__sub-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav__trends {
+  margin-left: 1vw;
+}
+/* header end */
+
+/* echarts start */
+.chart-container {
+  position: relative;
+  width: 80vw;
+  height: 80vh;
+  margin: 2vh auto auto;
+  overflow: hidden;
+}
+/* echarts end */
