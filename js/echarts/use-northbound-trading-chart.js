@@ -4,6 +4,9 @@ import { getHSGT, getTrends2 } from '../api/api.js';
 const HSGT_LEGEND_NAME = '北向资金';
 let tradingChart;
 const tradingChartOption = {
+  textStyle: {
+    fontSize: 16,
+  },
   tooltip: {
     show: true,
     trigger: 'axis',
@@ -77,16 +80,24 @@ const tradingChartOption = {
     },
   ],
 };
-const refreshTradingChart = async (secids = '1.000300') => {
-  const [hsgtRes, ...trendsResArr] = await Promise.all([getHSGT(), ...secids.split(',').map(secid => getTrends2(secid))]);
+
+/**
+ * 刷新图表
+ * @param {string} secids 多个股票代码，用逗号分隔
+ * @param {1|2} type 1: 净流入 2: 净买入
+ */
+const refreshTradingChart = async (secids = '1.000300', type = 1) => {
+  const [hsgtRes, ...trendsResArr] = await Promise.all([getHSGT(type), ...secids.split(',').map(secid => getTrends2(secid))]);
   if (hsgtRes.data.s2n && hsgtRes.data.s2n.length > 0) {
     const hsgtDataArr = hsgtRes.data.s2n.map(x => x.split(','));
     const hsgtDataTimes = hsgtDataArr.map(x => x[0]);
     const hsgtData = hsgtDataArr.filter(x => x[3] !== '-').map(x => +(+x[3] / 10000).toFixed(2));
     tradingChartOption.dataZoom[0].end = Math.ceil((hsgtData.length / hsgtDataTimes.length) * 100);
     tradingChartOption.xAxis.data = hsgtDataTimes;
-    tradingChartOption.yAxis[0].min = Math.round(Math.min(...hsgtData));
-    tradingChartOption.yAxis[0].max = Math.ceil(Math.max(...hsgtData));
+    const min = Math.round(Math.min(...hsgtData));
+    const max = Math.ceil(Math.max(...hsgtData));
+    tradingChartOption.yAxis[0].min = min;
+    tradingChartOption.yAxis[0].max = max;
     tradingChartOption.series[0] = {
       name: HSGT_LEGEND_NAME,
       type: 'line',
@@ -105,13 +116,15 @@ const refreshTradingChart = async (secids = '1.000300') => {
       const trendsData = trendsRes.data.trends.map(x => +x.split(',')[1]);
       const legendName = `${trendsRes.data.name}`;
       tradingChartOption.legend.data[i + 1] = legendName;
+      const min = Math.round(Math.min(...trendsData) / 10) * 10;
+      const max = Math.ceil(Math.max(...trendsData) / 10) * 10;
       tradingChartOption.yAxis[i + 1] = {
         type: 'value',
         name: `                 ${legendName}`,
         position: 'right',
         offset: i * 80,
-        min: Math.round(Math.min(...trendsData) / 10) * 10,
-        max: Math.ceil(Math.max(...trendsData) / 10) * 10,
+        min: min,
+        max: max,
       };
       tradingChartOption.series[i + 1] = {
         name: legendName,
