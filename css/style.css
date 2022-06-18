@@ -1,44 +1,170 @@
-* {
+/* base start */
+body,
+dd,
+div,
+dl,
+dt,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+input,
+li,
+ol,
+p,
+textarea,
+ul {
   margin: 0;
   padding: 0;
-  font-size: 1.5vh;
 }
 
+body,
+div,
+fieldset,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+html,
+p {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-width: 320px;
+  font-family: microsoft yahei, Verdana, Arial, Helvetica, sans-serif;
+  -webkit-text-size-adjust: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+strong {
+  font-weight: 400;
+  font-size: 100%;
+}
+
+em,
+i {
+  font-style: normal;
+}
+
+li,
+ol,
+ul {
+  list-style-type: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a,
+a:hover,
+a:visited {
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  /* -webkit-appearance: none; */
+  -moz-appearance: none;
+  /* appearance: none; */
+}
+
+img {
+  vertical-align: text-top;
+  border: none;
+}
+
+textarea {
+  resize: none;
+}
+
+a,
+img {
+  -webkit-touch-callout: none;
+}
+
+a,
+button,
+input {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+input {
+  outline: 0;
+  border: 0;
+}
+/* base end */
+
+#app {
+  font-size: 16px;
+}
+.ml15 {
+  margin-left: 15px;
+}
 /* header start */
 .nav {
-  width: 100vw;
-  margin: 0 auto;
+  width: 100%;
   text-align: center;
 }
 .nav__title {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px auto;
 }
 .nav__title-content {
-  font-size: 2vh;
+  font-size: 30px;
   font-weight: bold;
-  line-height: 5vh;
 }
 .nav__title-github {
-  margin-left: 1vw;
+  display: inline-flex;
 }
 .nav__sub-title {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.nav__trends {
-  margin-left: 1vw;
+.nav__select-container {
+  font-size: 18px;
+}
+.nav__select {
+  font-size: 16px;
+  padding: 2px;
 }
 /* header end */
 
 /* echarts start */
 .chart-container {
   position: relative;
-  width: 80vw;
+  width: 80%;
   height: 80vh;
   margin: 2vh auto auto;
   overflow: hidden;
+}
+@media screen and (max-width: 750px) {
+  .chart-container {
+    width: 84%;
+  }
 }
 /* echarts end */
