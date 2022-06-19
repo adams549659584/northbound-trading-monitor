@@ -125,10 +125,13 @@ const appConfig = {
     } else {
       that.northboundDataType = 1;
       // 14:50 切换净买入
-      const timeDiff = (1450 - dateNowNum) * 60 * 1000;
-      setTimeout(() => {
-        that.northboundDataType = 2;
-      }, timeDiff);
+      const northboundDataBSTime = new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate(), 14, 50, 0);
+      const timeDiff = northboundDataBSTime.getTime() - dateNow.getTime();
+      if (timeDiff > 0) {
+        setTimeout(() => {
+          that.northboundDataType = 2;
+        }, timeDiff);
+      }
     }
     that.refreshChart(el);
   },
