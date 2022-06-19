@@ -119,9 +119,16 @@ const appConfig = {
     if (dateNowNum < 930 || dateNowNum > 1500) {
       that.refreshTime = -1;
     }
-    // 9:30-14:50 净流入，其净买入
+    // 9:30-14:50 净流入，其它看净买入
     if (dateNowNum < 930 || dateNowNum >= 1450) {
       that.northboundDataType = 2;
+    } else {
+      that.northboundDataType = 1;
+      // 14:50 切换净买入
+      const timeDiff = (1450 - dateNowNum) * 60 * 1000;
+      setTimeout(() => {
+        that.northboundDataType = 2;
+      }, timeDiff);
     }
     that.refreshChart(el);
   },
