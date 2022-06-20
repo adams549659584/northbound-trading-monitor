@@ -81,7 +81,7 @@ const tradingChartOption = {
     },
   ],
 };
-
+let LAST_SEND_WEB_NOTIFY_HSGT_LENGTH = 2;
 /**
  * 刷新图表
  * @param {string} secids 多个股票代码，用逗号分隔
@@ -95,12 +95,13 @@ const refreshTradingChart = async (secids = '1.000300', type = 1) => {
     const hsgtDataTimes = hsgtDataArr.map(x => x[0]);
     const hsgtData = hsgtDataArr.filter(x => x[3] !== '-').map(x => +(+x[3] / 10000).toFixed(2));
     // 北向资金异动通知
-    if (hsgtData.length > 2) {
+    if (hsgtData.length > LAST_SEND_WEB_NOTIFY_HSGT_LENGTH) {
       const lastHsgtData = hsgtData[hsgtData.length - 1];
       const last2HsgtData = hsgtData[hsgtData.length - 2];
       const diffHsgtAmt = lastHsgtData - last2HsgtData;
       const notifyAmt = 10;
       if (Math.abs(diffHsgtAmt) > notifyAmt) {
+        LAST_SEND_WEB_NOTIFY_HSGT_LENGTH = hsgtData.length;
         sendWebNotify('北向资金大笔' + (diffHsgtAmt > 0 ? '流入' : '流出'), `一分钟内，北向资金异动超${diffHsgtAmt.toFixed(2)}亿，请及时关注`);
       }
     }
