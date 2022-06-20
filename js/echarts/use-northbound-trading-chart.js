@@ -108,8 +108,9 @@ const refreshTradingChart = async (secids = '1.000300', type = 1) => {
     tradingChartOption.xAxis.data = hsgtDataTimes;
     const min = Math.round(Math.min(...hsgtData));
     const max = Math.ceil(Math.max(...hsgtData));
-    tradingChartOption.yAxis[0].min = min;
-    tradingChartOption.yAxis[0].max = max;
+    const diff = Math.ceil((max - min) * 0.1);
+    tradingChartOption.yAxis[0].min = min - diff;
+    tradingChartOption.yAxis[0].max = max + diff;
     tradingChartOption.series[0] = {
       name: HSGT_LEGEND_NAME,
       type: 'line',
@@ -130,13 +131,14 @@ const refreshTradingChart = async (secids = '1.000300', type = 1) => {
       tradingChartOption.legend.data[i + 1] = legendName;
       const min = Math.round(Math.min(...trendsData) / 10) * 10;
       const max = Math.ceil(Math.max(...trendsData) / 10) * 10;
+      const diff = Math.ceil((max - min) * 0.1);
       tradingChartOption.yAxis[i + 1] = {
         type: 'value',
         name: `                 ${legendName}`,
         position: 'right',
         offset: i * 80,
-        min: min,
-        max: max,
+        min: min - diff,
+        max: max + diff,
       };
       tradingChartOption.series[i + 1] = {
         name: legendName,
