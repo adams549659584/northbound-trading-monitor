@@ -1,5 +1,6 @@
 import * as echarts from './echarts.esm.min.js';
 import { getHSGT, getTrends2 } from '../api/api.js';
+import { useNotify } from '../utils/use-notify.js';
 
 const HSGT_LEGEND_NAME = '北向资金';
 let tradingChart;
@@ -87,11 +88,22 @@ const tradingChartOption = {
  * @param {1|2} type 1: 净流入 2: 净买入
  */
 const refreshTradingChart = async (secids = '1.000300', type = 1) => {
+  const { sendWebNotify } = useNotify();
   const [hsgtRes, ...trendsResArr] = await Promise.all([getHSGT(type), ...secids.split(',').map(secid => getTrends2(secid))]);
   if (hsgtRes.data.s2n && hsgtRes.data.s2n.length > 0) {
     const hsgtDataArr = hsgtRes.data.s2n.map(x => x.split(','));
     const hsgtDataTimes = hsgtDataArr.map(x => x[0]);
     const hsgtData = hsgtDataArr.filter(x => x[3] !== '-').map(x => +(+x[3] / 10000).toFixed(2));
+    // 北向资金异动通知
+    if (hsgtData.length > 2) {
+      const lastHsgtData = hsgtData[hsgtData.length - 1];
+      const last2HsgtData = hsgtData[hsgtData.length - 2];
+      const diffHsgtAmt = lastHsgtData - last2HsgtData;
+      const notifyAmt = 10;
+      if (Math.abs(diffHsgtAmt) > notifyAmt) {
+        sendWebNotify('北向资金大笔' + (diffHsgtAmt > 0 ? '流入' : '流出'), `一分钟内，北向资金异动超${diffHsgtAmt.toFixed(2)}亿，请及时关注`);
+      }
+    }
     tradingChartOption.dataZoom[0].end = Math.ceil((hsgtData.length / hsgtDataTimes.length) * 100);
     tradingChartOption.xAxis.data = hsgtDataTimes;
     const min = Math.round(Math.min(...hsgtData));
