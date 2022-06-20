@@ -116,7 +116,7 @@ const appConfig = {
     const that = this;
     const dateNow = new Date();
     // 9:30-15:00 不刷新
-    const dateNowNum = +`${dateNow.getHours()}${dateNow.getMinutes()}`;
+    const dateNowNum = +`${dateNow.getHours()}${dateNow.getMinutes().toString().padStart(2, '0')}`;
     if (dateNowNum < 930 || dateNowNum > 1500) {
       that.refreshTime = -1;
     }
