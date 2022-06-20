@@ -1,3 +1,19 @@
+const initWebNotifyPermission = async () => {
+  if (!('Notification' in window)) {
+    console.warn('该浏览器不支持桌面通知');
+    return;
+  }
+  if (Notification.permission === 'denied') {
+    console.error('用户拒绝了桌面通知');
+    return;
+  }
+  if (Notification.permission === 'default') {
+    const webNotifyPermission = await Notification.requestPermission();
+    return initWebNotifyPermission();
+  }
+  console.log('浏览器桌面通知已开启');
+};
+
 /**
  * 发送浏览器 Notification 桌面推送通知
  * @param {string} title 标题
@@ -19,7 +35,7 @@ const sendWebNotify = async (title, body) => {
   }
   const notification = new Notification(title, {
     body,
-    icon: '/favicon.ico',
+    icon: '../../favicon.ico',
     timestamp: Date.now(),
   });
   return notification;
@@ -27,6 +43,7 @@ const sendWebNotify = async (title, body) => {
 
 export function useNotify() {
   return {
+    initWebNotifyPermission,
     sendWebNotify,
   };
 }

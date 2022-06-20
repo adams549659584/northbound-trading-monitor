@@ -1,5 +1,6 @@
 import { createApp } from './petite-vue/petite-vue.es.js';
 import { useNorthBoundTradingChart } from './echarts/use-northbound-trading-chart.js';
+import { useNotify } from './utils/use-notify.js';
 
 const refreshConfigs = [
   {
@@ -134,6 +135,8 @@ const appConfig = {
       }
     }
     that.refreshChart(el);
+    const { initWebNotifyPermission } = useNotify();
+    initWebNotifyPermission();
   },
 };
 
