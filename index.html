@@ -14,7 +14,7 @@
       <header>
         <div class="nav">
           <div class="nav__title">
-            <span class="nav__title-content">{{ trendsTitle }}</span>
+            <h1 class="nav__title-content">{{ trendsTitle }}</h1>
             <a class="nav__title-github ml15" :href="githubLink" target="_blank">
               <svg t="1655448756532" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1214" width="32" height="32">
                 <path
@@ -27,19 +27,19 @@
           </div>
           <div class="nav__sub-title">
             <div class="nav__select-container">
-              刷新:
+              <label class="nav__label">刷新:</label>
               <select class="nav__select" v-model="refreshTime" @change="changeRefreshTime">
                 <option v-for="config in refreshConfigs" :value="config.time">{{ config.desc }}</option>
               </select>
             </div>
             <div class="nav__select-container ml15">
-              数据流:
+              <label class="nav__label">数据流:</label>
               <select class="nav__select" v-model="northboundDataType" @change="changeNorthboundData">
                 <option v-for="config in northboundDataConfigs" :value="config.type">{{ config.desc }}</option>
               </select>
             </div>
             <div class="nav__select-container ml15">
-              指数叠加:
+              <label class="nav__label">指数叠加:</label>
               <select class="nav__select" v-model="secid" @change="changeTrends">
                 <option v-for="config in trendsConfigs" :value="config.secid">{{ config.desc }}</option>
               </select>
