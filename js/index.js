@@ -65,6 +65,7 @@ const trendsConfigs = [
   },
 ];
 const appConfig = {
+  isLoaded: false,
   githubLink: 'https://github.com/adams549659584/northbound-trading-monitor',
   trendsTitle: `北向-${trendsConfigs[0].desc}叠加`,
   refreshConfigs,
@@ -114,6 +115,7 @@ const appConfig = {
    */
   async initTrendsEcharts(el) {
     const that = this;
+    that.isLoaded = true;
     const dateNow = new Date();
     // 9:30-15:00 不刷新
     const dateNowNum = +`${dateNow.getHours()}${dateNow.getMinutes().toString().padStart(2, '0')}`;

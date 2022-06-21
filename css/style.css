@@ -126,6 +126,51 @@ input {
 .ml15 {
   margin-left: 15px;
 }
+
+/* loading start */
+.loading__bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background: rgb(248, 249, 250);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading__border {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  vertical-align: -40px;
+  border: 5px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  -webkit-animation: 0.75s linear infinite loading__border;
+  animation: 0.75s linear infinite loading__border;
+  color: rgba(220, 53, 69, 1);
+}
+@-webkit-keyframes loading__border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loading__border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading__content {
+  position: absolute;
+  font-size: 18px;
+  color: rgba(220, 53, 69, 1);
+}
+/* loading end */
+
 /* header start */
 .nav {
   width: 100%;
