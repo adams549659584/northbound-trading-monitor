@@ -11,6 +11,10 @@
 
   <body>
     <div id="app" v-scope>
+      <div class="loading__bg" v-if="!isLoaded">
+        <div class="loading__border"></div>
+        <div class="loading__content">冲冲冲...</div>
+      </div>
       <header>
         <div class="nav">
           <div class="nav__title">
