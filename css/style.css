@@ -187,7 +187,33 @@ input {
   font-weight: bold;
 }
 .nav__title-github {
-  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 32px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+.nav__title-github-icon {
+  float: left;
+  width: 32px;
+  height: 32px;
+  border-radius: 32px;
+}
+.nav__title-github-content {
+  float: left;
+  margin-left: 5px;
+}
+@media screen and (min-width: 750px) {
+  .nav__title-github:hover {
+    width: 112px;
+    background-color: #212529;
+    color: #fff;
+  }
+  .nav__title-github:hover .nav__title-github-icon {
+    background-color: #fff;
+  }
 }
 .nav__sub-title {
   display: flex;

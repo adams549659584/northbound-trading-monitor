@@ -4,6 +4,10 @@ import { useNotify } from '../utils/use-notify.js';
 
 const HSGT_LEGEND_NAME = '北向资金';
 let tradingChart;
+const dataZoomConfig = {
+  start: 0,
+  end: 100,
+};
 const tradingChartOption = {
   textStyle: {
     fontSize: 16,
@@ -19,8 +23,8 @@ const tradingChartOption = {
     {
       show: true,
       type: 'slider',
-      start: 0,
-      end: 100,
+      start: dataZoomConfig.start,
+      end: dataZoomConfig.end,
     },
   ],
   xAxis: {
@@ -105,7 +109,15 @@ const refreshTradingChart = async (secids = '1.000300', type = 1) => {
         sendWebNotify('北向资金大笔' + (diffHsgtAmt > 0 ? '流入' : '流出'), `一分钟内，北向资金异动超${diffHsgtAmt.toFixed(2)}亿，请及时关注`);
       }
     }
-    tradingChartOption.dataZoom[0].end = Math.ceil((hsgtData.length / hsgtDataTimes.length) * 100);
+    // 滑动条
+    tradingChartOption.dataZoom[0].start = dataZoomConfig.start;
+    const dataZoomEnd = Math.ceil((hsgtData.length / hsgtDataTimes.length) * 100);
+    if (Math.abs(dataZoomConfig.end - dataZoomEnd) > 2) {
+      tradingChartOption.dataZoom[0].end = dataZoomConfig.end;
+    } else {
+      tradingChartOption.dataZoom[0].end = dataZoomEnd;
+    }
+
     tradingChartOption.xAxis.data = hsgtDataTimes;
     const min = Math.round(Math.min(...hsgtData));
     const max = Math.ceil(Math.max(...hsgtData));
@@ -168,6 +180,10 @@ export function useNorthBoundTradingChart(dom) {
     tradingChart = echarts.init(dom, null, {
       renderer: 'canvas',
       useDirtyRect: false,
+    });
+    tradingChart.on('datazoom', function (params) {
+      dataZoomConfig.start = params.start;
+      dataZoomConfig.end = params.end;
     });
     window.addEventListener('resize', tradingChart.resize);
   }
