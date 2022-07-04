@@ -112,7 +112,7 @@ const refreshTradingChart = async (secids = '1.000300', type = 1) => {
     // 滑动条
     tradingChartOption.dataZoom[0].start = dataZoomConfig.start;
     const dataZoomEnd = Math.ceil((hsgtData.length / hsgtDataTimes.length) * 100);
-    if (Math.abs(dataZoomConfig.end - dataZoomEnd) > 2) {
+    if (dataZoomEnd - dataZoomConfig.end > 2) {
       tradingChartOption.dataZoom[0].end = dataZoomConfig.end;
     } else {
       tradingChartOption.dataZoom[0].end = dataZoomEnd;
