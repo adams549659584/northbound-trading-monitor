@@ -2,6 +2,9 @@
 importScripts('./js/sw/workbox-sw.js');
 
 const SW_VERSION = '1.0.0';
+const DATE_NOW = new Date();
+const DATE_NOW_NUM = +`${DATE_NOW.getHours()}${DATE_NOW.getMinutes().toString().padStart(2, '0')}`;
+const IS_TRADING_TIME = DATE_NOW_NUM >= 930 && DATE_NOW_NUM <= 1500;
 
 // todo debugger
 // workbox.setConfig({ debug: true });
@@ -74,24 +77,81 @@ workbox.precaching.cleanupOutdatedCaches();
 
 // image
 workbox.routing.registerRoute(
-  /\.(?:png|jpg|jpeg|svg|gif)$/,
+  ({ request }) => request.destination === 'image',
   new workbox.strategies.CacheFirst({
     cacheName: 'northbound-trading-monitor-image',
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 60, // 60 个
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 天
+      }),
+    ],
   })
 );
 // css
 workbox.routing.registerRoute(
-  /\.css$/,
+  ({ request }) => request.destination === 'style',
   new workbox.strategies.CacheFirst({
     cacheName: 'northbound-trading-monitor-css',
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 60, // 60 个
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 天
+      }),
+    ],
   })
 );
 // js
 workbox.routing.registerRoute(
-  /\.js$/,
+  ({ request }) => request.destination === 'script',
   new workbox.strategies.CacheFirst({
     cacheName: 'northbound-trading-monitor-js',
+    plugins: [
+      new workbox.expiration.ExpirationPlugin({
+        maxEntries: 60, // 60 个
+        maxAgeSeconds: 7 * 24 * 60 * 60, // 7 天
+      }),
+    ],
   })
+);
+
+const apiCacheName = 'northbound-trading-monitor-api';
+/**
+ * @type [import('workbox-core').WorkboxPlugin[]]
+ */
+const apiCachePlugins = [
+  new workbox.cacheableResponse.CacheableResponsePlugin({
+    statues: [0, 200],
+  }),
+  new workbox.expiration.ExpirationPlugin({
+    maxEntries: 10, // 2 个
+    maxAgeSeconds: 7 * 24 * 60 * 60, // 7 天
+  }),
+  {
+    cacheKeyWillBeUsed: async ({ request, mode, params, event, state }) => {
+      // `request` is the `Request` object that would otherwise be used as the cache key.
+      // `mode` is either 'read' or 'write'.
+      // Return either a string, or a `Request` whose `url` property will be used as the cache key.
+      // Returning the original `request` will make this a no-op.
+      // 北向资金接口缓存 key 不要时间戳
+      if (request.url.includes('/api/qt/kamtbs.rtmin/get')) {
+        return request.url.substr(0, request.url.lastIndexOf('&_='));
+      }
+      return request;
+    },
+  },
+];
+workbox.routing.registerRoute(
+  ({ request }) => request.url.includes('/api/qt'),
+  IS_TRADING_TIME
+    ? new workbox.strategies.NetworkFirst({
+        cacheName: apiCacheName,
+        plugins: apiCachePlugins,
+      })
+    : new workbox.strategies.CacheFirst({
+        cacheName: apiCacheName,
+        plugins: apiCachePlugins,
+      })
 );
 
 // service worker通过message和主线程通讯
