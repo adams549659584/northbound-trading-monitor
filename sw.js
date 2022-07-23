@@ -134,7 +134,7 @@ const apiCachePlugins = [
       // Return either a string, or a `Request` whose `url` property will be used as the cache key.
       // Returning the original `request` will make this a no-op.
       // 北向资金接口缓存 key 不要时间戳
-      if (request.url.includes('/api/qt/kamtbs.rtmin/get')) {
+      if (request.url.includes('/api/qt/kamtbs.rtmin/get') || request.url.includes('/api/qt/kamt.rtmin/get')) {
         return request.url.substr(0, request.url.lastIndexOf('&_='));
       }
       return request;
