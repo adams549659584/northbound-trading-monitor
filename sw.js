@@ -64,7 +64,7 @@ workbox.precaching.precacheAndRoute([
   // html
   {
     url: './',
-    revision: '2022.07.23',
+    revision: '2022.09.29',
   },
   // ico
   {
@@ -162,4 +162,21 @@ self.addEventListener('message', event => {
   if (replyPort && message && message.type === 'GET_VERSION') {
     replyPort.postMessage(SW_VERSION);
   }
+});
+
+// 安装阶段可删除旧缓存等等，hack
+self.addEventListener('install', async event => {
+  await caches.open(apiCacheName).then(async cache => {
+    const requests = await cache.keys();
+    return await Promise.all(
+      requests.map(request => {
+        if (request.url.includes('/api/qt/kamt.rtmin/get') && request.url.lastIndexOf('&_=')) {
+          console.log(`del bad req : `, request);
+          return cache.delete(request);
+        } else {
+          return Promise.resolve();
+        }
+      })
+    );
+  });
 });
