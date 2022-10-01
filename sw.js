@@ -64,7 +64,7 @@ workbox.precaching.precacheAndRoute([
   // html
   {
     url: './',
-    revision: '2022.09.29',
+    revision: '2022.10.01',
   },
   // ico
   {
